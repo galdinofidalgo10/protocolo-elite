@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Ajuda Mútua | Protocolo Elite</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { background: #020617; color: #f8fafc; font-family: 'Montserrat', sans-serif; }
+        .glass-card { background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(10px); border: 1px solid rgba(212, 175, 55, 0.1); border-radius: 20px; }
+        .btn-gold { background: linear-gradient(135deg, #b8860b 0%, #fde047 100%); color: #000; font-weight: 900; text-transform: uppercase; }
+        .input-field { width: 100%; background: rgba(30, 41, 59, 0.5); border: 1px solid rgba(212, 175, 55, 0.2); padding: 15px; border-radius: 12px; color: white; outline: none; transition: 0.3s; }
+        .input-field:focus { border-color: #fde047; box-shadow: 0 0 10px rgba(253, 224, 71, 0.2); }
+        
+        /* Botão Animado */
+        .btn-pulse { animation: pulse shadow 2s infinite; box-shadow: 0 0 0 0 rgba(253, 224, 71, 0.7); }
+        @keyframes pulse-shadow { 
+            0% { box-shadow: 0 0 0 0 rgba(253, 224, 71, 0.7); }
+            70% { box-shadow: 0 0 0 15px rgba(253, 224, 71, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(253, 224, 71, 0); }
+        }
+
+        #toast { visibility: hidden; min-width: 280px; background: #fde047; color: #000; text-align: center; border-radius: 50px; padding: 15px; position: fixed; z-index: 9999; left: 50%; top: 30px; transform: translateX(-50%); font-weight: 900; font-size: 11px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        #toast.show { visibility: visible; animation: slideDown 0.5s; }
+        @keyframes slideDown { from { top: -100px; } to { top: 30px; } }
+
+        .step-badge { background: #fde047; color: #000; width: 18px; height: 18px; display: inline-flex; align-items: center; justify-content: center; border-radius: 50%; font-size: 10px; font-weight: 900; margin-right: 5px; }
+    </style>
+</head>
+<body class="p-4 pb-12">
+    <div id="toast"></div>
+
+    <div class="max-w-md mx-auto">
+        <header class="text-center mb-8 pt-4">
+            <h1 class="text-4xl font-black italic text-yellow-500 uppercase tracking-tighter leading-none">Protocolo Elite</h1>
+            <p class="text-[9px] font-bold text-slate-500 tracking-[0.5em] uppercase mt-2 text-center">Sistema de Gestão Mútua</p>
+        </header>
+
+        <div class="glass-card p-4 mb-6 text-center border-dashed border-yellow-500/30">
+            <p class="text-[10px] uppercase font-bold text-slate-400">Você foi convidado por:</p>
+            <h2 id="padrinho-nome" class="text-lg font-black text-white uppercase italic">Carregando...</h2>
+        </div>
+
+        <div class="mb-8 space-y-4">
+            <h3 class="text-center text-[11px] font-black uppercase tracking-widest text-yellow-500">Como Iniciar:</h3>
+            <div class="grid grid-cols-1 gap-3">
+                <div class="glass-card p-4 flex items-center gap-3">
+                    <span class="step-badge">1</span>
+                    <p class="text-[10px] font-bold uppercase">Toque nos cards abaixo para copiar o PIX e doe R$ 5,00 para cada nível.</p>
+                </div>
+                <div class="glass-card p-4 flex items-center gap-3">
+                    <span class="step-badge">2</span>
+                    <p class="text-[10px] font-bold uppercase">Tire print dos 3 comprovantes de transferência.</p>
+                </div>
+                <div class="glass-card p-4 flex items-center gap-3">
+                    <span class="step-badge">3</span>
+                    <p class="text-[10px] font-bold uppercase">Anexe as fotos e seus dados no formulário final.</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="container-pix" class="space-y-3 mb-8"></div>
+
+        <div class="glass-card p-6 border-t-4 border-t-yellow-500 shadow-2xl">
+            <div class="text-center mb-6">
+                <h2 class="text-xl font-black uppercase italic italic">Ativar meu Acesso</h2>
+                <p class="text-[9px] text-yellow-500 font-bold uppercase tracking-widest">Preencha com Atenção</p>
+            </div>
+            
+            <div class="space-y-5">
+                <div class="text-center">
+                    <p class="text-[9px] font-black text-slate-400 mb-3 uppercase tracking-widest text-center">Anexe os 3 Comprovantes:</p>
+                    <div class="grid grid-cols-3 gap-3">
+                        <label class="btn-gold h-12 rounded-xl flex flex-col items-center justify-center text-[8px] cursor-pointer active:scale-90 transition-transform"><span>DOC 1</span><input type="file" id="f1" class="hidden" accept="image/*"></label>
+                        <label class="btn-gold h-12 rounded-xl flex flex-col items-center justify-center text-[8px] cursor-pointer active:scale-90 transition-transform"><span>DOC 2</span><input type="file" id="f2" class="hidden" accept="image/*"></label>
+                        <label class="btn-gold h-12 rounded-xl flex flex-col items-center justify-center text-[8px] cursor-pointer active:scale-90 transition-transform"><span>DOC 3</span><input type="file" id="f3" class="hidden" accept="image/*"></label>
+                    </div>
+                </div>
+
+                <div class="space-y-3">
+                    <input type="text" id="nome" placeholder="SEU NOME COMPLETO" class="input-field text-xs uppercase font-bold">
+                    <input type="text" id="pix_user" placeholder="SUA CHAVE PIX (PARA RECEBER)" class="input-field text-xs font-bold">
+                    <input type="tel" id="whatsapp" placeholder="SEU WHATSAPP (DDD + NÚMERO)" class="input-field text-xs font-bold">
+                </div>
+
+                <button onclick="ativar()" class="btn-gold btn-pulse w-full h-20 rounded-2xl text-base font-black active:scale-95 transition-all shadow-lg shadow-yellow-500/20 mt-4">
+                    SOLICITAR MINHA ATIVAÇÃO
+                    <span class="block text-[8px] opacity-60 font-bold">ENVIAR AGORA PARA O SUPORTE</span>
+                </button>
+            </div>
+        </div>
+
+        <footer class="mt-10 text-center">
+            <p class="text-[8px] font-bold text-slate-600 uppercase tracking-[3px]">© 2026 Protocolo Elite - Gestão Independente</p>
+        </footer>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyCZIP0M0M8FqC_LAtI9I36e_IIn_V-C4m4",
+            authDomain: "ajuda-mutua-7d99a.firebaseapp.com",
+            databaseURL: "https://ajuda-mutua-7d99a-default-rtdb.firebaseio.com",
+            projectId: "ajuda-mutua-7d99a",
+            storageBucket: "ajuda-mutua-7d99a.appspot.com",
+            appId: "1:1070775313117:web:fa90f5f0cb519ab38b1d34"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
+        const params = new URLSearchParams(window.location.search);
+        
+        // Dados do Padrinho (Nível 1)
+        const pNome = params.get('n1') || "Galdino Pereira Fidalgo";
+        const pPix = params.get('p1') || "04036277375";
+        
+        document.getElementById('padrinho-nome').innerText = pNome;
+
+        const recebedores = [
+            { n: pNome, p: pPix },
+            { n: params.get('n2') || "Galdino Pereira Fidalgo", p: params.get('p2') || "04036277375" },
+            { n: params.get('n3') || "Galdino Pereira Fidalgo", p: params.get('p3') || "04036277375" }
+        ];
+
+        const container = document.getElementById('container-pix');
+        recebedores.forEach((r, i) => {
+            container.innerHTML += `
+                <div onclick="copy('${r.p}')" class="glass-card p-4 border-l-4 border-l-yellow-500 active:scale-95 cursor-pointer transition-all hover:bg-slate-800">
+                    <div class="flex justify-between items-center text-white">
+                        <div class="flex flex-col">
+                            <span class="text-[7px] text-yellow-500 font-black uppercase tracking-widest mb-1">Nível 0${i+1}</span>
+                            <h3 class="font-black text-xs uppercase leading-tight">${r.n}</h3>
+                            <p class="text-[8px] text-slate-400 mt-1">Chave: ${r.p}</p>
+                        </div>
+                        <div class="text-right">
+                            <span class="text-yellow-500 font-black text-sm block italic">R$ 5,00</span>
+                            <span class="text-[6px] text-slate-500 uppercase font-bold">Toque para Copiar</span>
+                        </div>
+                    </div>
+                </div>`;
+        });
+
+        function showT(m) { const t = document.getElementById("toast"); t.innerText = m; t.className = "show"; setTimeout(() => { t.className = ""; }, 3000); }
+        function copy(v) { navigator.clipboard.writeText(v); showT("CHAVE PIX COPIADA!"); }
+
+        const processImg = file => new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = (e) => {
+                const img = new Image();
+                img.src = e.target.result;
+                img.onload = () => {
+                    const canvas = document.createElement('canvas');
+                    const max = 600;
+                    let w = img.width, h = img.height;
+                    if (w > h) { if (w > max) { h *= max / w; w = max; } }
+                    else { if (h > max) { w *= max / h; h = max; } }
+                    canvas.width = w; canvas.height = h;
+                    canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+                    resolve(canvas.toDataURL('image/jpeg', 0.7));
+                };
+            };
+        });
+
+        async function ativar() {
+            const n = document.getElementById('nome').value;
+            const p = document.getElementById('pix_user').value;
+            const w = document.getElementById('whatsapp').value.replace(/\D/g,'');
+            const inputs = [document.getElementById('f1'), document.getElementById('f2'), document.getElementById('f3')];
+            
+            if(!n || !p || !w) return showT("POR FAVOR, PREENCHA TUDO!");
+            
+            let fotos = [];
+            showT("PROCESSANDO IMAGENS...");
+            try {
+                for (const input of inputs) { if (input.files[0]) { fotos.push(await processImg(input.files[0])); } }
+                if(fotos.length < 3) return showT("ANEXE OS 3 COMPROVANTES!");
+                
+                showT("ENVIANDO SOLICITAÇÃO...");
+                database.ref('solicitacoes/').push({
+                    nome: n, pix: p, whatsapp: w, comprovantes: fotos, 
+                    indicado_por: pNome, data: new Date().toLocaleString('pt-BR'), status: 'pendente'
+                }).then(() => { 
+                    alert("SOLICITAÇÃO ENVIADA!\nAguarde a liberação pela Gestão Elite. Você receberá uma mensagem no WhatsApp assim que for aprovado.");
+                    location.reload();
+                });
+            } catch (e) { showT("ERRO AO ENVIAR. TENTE NOVAMENTE."); }
+        }
+    </script>
+</body>
+</html>
