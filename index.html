@@ -7,16 +7,14 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        body { background: #020617; color: #f8fafc; font-family: 'Montserrat', sans-serif; overflow-x: hidden; }
+        body { background: #020617; color: #f8fafc; font-family: 'Montserrat', sans-serif; }
         .glass-card { background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(10px); border: 1px solid rgba(212, 175, 55, 0.1); border-radius: 20px; }
         .btn-gold { background: linear-gradient(135deg, #b8860b 0%, #fde047 100%); color: #000; font-weight: 900; text-transform: uppercase; }
-        .input-field { width: 100%; background: rgba(30, 41, 59, 0.5); border: 1px solid rgba(212, 175, 55, 0.2); padding: 15px; border-radius: 12px; color: white; outline: none; transition: 0.3s; }
-        .input-field:focus { border-color: #fde047; }
-
-        /* MODAL DOURADO - PERSONALIZADO */
+        .input-field { width: 100%; background: rgba(30, 41, 59, 0.5); border: 1px solid rgba(212, 175, 55, 0.2); padding: 15px; border-radius: 12px; color: white; outline: none; }
+        
+        /* Modal Elite (Substitui o alerta cinza) */
         #modalElite { display: none; }
-        #modalElite.active { display: flex; animation: fadeIn 0.3s ease-out; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        #modalElite.active { display: flex; }
 
         #toast { visibility: hidden; min-width: 280px; background: #fde047; color: #000; text-align: center; border-radius: 50px; padding: 15px; position: fixed; z-index: 9999; left: 50%; top: 30px; transform: translateX(-50%); font-weight: 900; font-size: 11px; }
         #toast.show { visibility: visible; animation: slideDown 0.5s; }
@@ -27,48 +25,40 @@
     <div id="toast"></div>
 
     <div id="modalElite" class="fixed inset-0 bg-black/90 backdrop-blur-md z-[10000] items-center justify-center p-6 text-center">
-        <div class="glass-card p-8 border-2 border-yellow-500 max-w-xs w-full shadow-[0_0_50px_rgba(253,224,71,0.3)] animate-in zoom-in duration-300">
-            <div class="w-20 h-20 bg-yellow-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg shadow-yellow-500/40">
-                <svg class="w-12 h-12 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div class="glass-card p-8 border-2 border-yellow-500 max-w-xs w-full shadow-[0_0_30px_rgba(253,224,71,0.2)]">
+            <div class="w-16 h-16 bg-yellow-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                <svg class="w-10 h-10 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M5 13l4 4L19 7"></path>
                 </svg>
             </div>
-            <h2 class="text-yellow-500 font-black text-2xl uppercase italic mb-3">Solicitação Enviada!</h2>
-            <p class="text-[11px] text-white font-bold leading-relaxed uppercase opacity-90">
-                Aguarde a liberação pela <span class="text-yellow-500">Gestão Elite</span>.<br><br>
-                Você receberá uma mensagem no WhatsApp assim que seu acesso for aprovado.
+            <h2 class="text-yellow-500 font-black text-xl uppercase mb-3">Solicitação Enviada!</h2>
+            <p class="text-[10px] text-white font-bold leading-relaxed uppercase opacity-80">
+                Aguarde a liberação pela Gestão Elite. Você receberá uma mensagem no WhatsApp assim que for aprovado.
             </p>
-            <button onclick="fecharModal()" class="btn-gold w-full py-4 mt-8 rounded-xl text-xs shadow-xl active:scale-95 transition-all">
-                ENTENDI
-            </button>
+            <button onclick="fecharModal()" class="btn-gold w-full py-3 mt-6 rounded-xl text-xs">ENTENDI</button>
         </div>
     </div>
 
     <div class="max-w-md mx-auto">
-        <header class="text-center mb-8 pt-4">
-            <h1 class="text-4xl font-black italic text-yellow-500 uppercase tracking-tighter leading-none">Protocolo Elite</h1>
-            <p class="text-[9px] font-bold text-slate-500 tracking-[0.5em] uppercase mt-2">Sistema Independente</p>
+        <header class="text-center mb-6 pt-4">
+            <h1 class="text-3xl font-black italic text-yellow-500 uppercase tracking-tighter">Ajuda Mútua</h1>
+            <p class="text-[8px] font-bold text-slate-500 tracking-[0.4em] uppercase">Protocolo Elite</p>
         </header>
 
         <div id="container-pix" class="space-y-3 mb-6"></div>
 
-        <div class="glass-card p-6 border-t-2 border-t-yellow-500/50 shadow-2xl">
-            <h2 class="text-center text-[11px] text-yellow-500 font-black uppercase mb-6 tracking-widest">Validar sua Entrada</h2>
-            
-            <div class="space-y-5">
-                <div class="grid grid-cols-3 gap-3">
-                    <label class="btn-gold h-12 rounded-xl flex items-center justify-center text-[9px] cursor-pointer active:scale-90 transition-transform shadow-lg shadow-yellow-500/10 text-center leading-none">PIX 1<input type="file" id="f1" class="hidden" accept="image/*"></label>
-                    <label class="btn-gold h-12 rounded-xl flex items-center justify-center text-[9px] cursor-pointer active:scale-90 transition-transform shadow-lg shadow-yellow-500/10 text-center leading-none">PIX 2<input type="file" id="f2" class="hidden" accept="image/*"></label>
-                    <label class="btn-gold h-12 rounded-xl flex items-center justify-center text-[9px] cursor-pointer active:scale-90 transition-transform shadow-lg shadow-yellow-500/10 text-center leading-none">PIX 3<input type="file" id="f3" class="hidden" accept="image/*"></label>
+        <div class="glass-card p-6 border-t-2 border-t-yellow-500/30">
+            <h2 class="text-center text-[10px] text-yellow-500 font-black uppercase mb-4 tracking-widest">Validar sua Entrada</h2>
+            <div class="space-y-4">
+                <div class="grid grid-cols-3 gap-2 text-center">
+                    <label class="btn-gold h-10 rounded-lg flex items-center justify-center text-[8px] cursor-pointer">PIX 1<input type="file" id="f1" class="hidden" accept="image/*"></label>
+                    <label class="btn-gold h-10 rounded-lg flex items-center justify-center text-[8px] cursor-pointer">PIX 2<input type="file" id="f2" class="hidden" accept="image/*"></label>
+                    <label class="btn-gold h-10 rounded-lg flex items-center justify-center text-[8px] cursor-pointer">PIX 3<input type="file" id="f3" class="hidden" accept="image/*"></label>
                 </div>
-
-                <div class="space-y-3">
-                    <input type="text" id="nome" placeholder="SEU NOME COMPLETO" class="input-field text-xs uppercase font-bold">
-                    <input type="text" id="pix_user" placeholder="SUA CHAVE PIX" class="input-field text-xs font-bold">
-                    <input type="tel" id="whatsapp" placeholder="SEU WHATSAPP (DDD + NÚMERO)" class="input-field text-xs font-bold">
-                </div>
-
-                <button onclick="ativar()" class="btn-gold w-full h-16 rounded-2xl text-base font-black active:scale-95 shadow-xl shadow-yellow-500/20 mt-4 transition-all">Solicitar Ativação</button>
+                <input type="text" id="nome" placeholder="SEU NOME COMPLETO" class="input-field text-xs uppercase font-bold">
+                <input type="text" id="pix_user" placeholder="SUA CHAVE PIX" class="input-field text-xs">
+                <input type="tel" id="whatsapp" placeholder="SEU WHATSAPP (DDD + NÚMERO)" class="input-field text-xs">
+                <button onclick="ativar()" class="btn-gold w-full h-16 rounded-xl text-sm font-black active:scale-95 shadow-lg shadow-yellow-500/20">Solicitar Ativação</button>
             </div>
         </div>
     </div>
@@ -100,16 +90,11 @@
         const container = document.getElementById('container-pix');
         recebedores.forEach((r, i) => {
             container.innerHTML += `
-                <div onclick="copy('${r.p}')" class="glass-card p-5 border-l-4 border-l-yellow-500 active:scale-95 cursor-pointer hover:bg-slate-800/50 transition-all">
+                <div onclick="copy('${r.p}')" class="glass-card p-4 border-l-4 border-l-yellow-500 active:scale-95 cursor-pointer">
                     <div class="flex justify-between items-center text-white">
-                        <div>
-                            <p class="text-[7px] text-yellow-500 font-black uppercase tracking-[2px] mb-1">Nível 0${i+1}</p>
-                            <h3 class="font-black text-xs uppercase leading-tight">${r.n}</h3>
-                        </div>
-                        <div class="text-right">
-                            <span class="text-yellow-500 font-black text-sm italic">R$ 5,00</span>
-                            <p class="text-[6px] text-slate-500 font-bold uppercase mt-1">Copiar Chave</p>
-                        </div>
+                        <div><p class="text-[7px] text-yellow-500 font-black uppercase">Nível 0${i+1}</p>
+                        <h3 class="font-black text-xs uppercase">${r.n}</h3></div>
+                        <span class="text-yellow-500 font-black text-xs">R$ 5,00</span>
                     </div>
                 </div>`;
         });
@@ -149,12 +134,11 @@
             try {
                 for (const input of inputs) { if (input.files[0]) { fotos.push(await processImg(input.files[0])); } }
                 if(fotos.length < 3) return showT("ANEXE AS 3 FOTOS!");
-                
                 database.ref('solicitacoes/').push({
                     nome: n, pix: p, whatsapp: w, comprovantes: fotos, 
                     indicado_por: pNome, data: new Date().toLocaleString('pt-BR'), status: 'pendente'
                 }).then(() => { 
-                    // ABRE O MODAL DOURADO - NADA DE ALERT CINZA AQUI!
+                    // CHAMA O MODAL DOURADO
                     document.getElementById('modalElite').classList.add('active');
                 });
             } catch (e) { showT("ERRO NO ENVIO."); }
